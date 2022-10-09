@@ -19,7 +19,7 @@ jobs:
     
     - name: Export image
       run: |
-        docker save -o image.tar move/cli
+        docker save -o image.tar move/cli:latest
     
     - name: Relase
       uses: softprops/action-gh-release@v1
