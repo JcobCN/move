@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build -t move/cli -f docker/move-cli/Dockerfile .
+    
+    - name: Export image
+      run: |
+        docker save -o image.tar move/cli
+    
+    - name: Relase
+      uses: softprops/action-gh-release@v1
+      
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.sha }}
+        #body_path: To do new Release.
+        files: ${{github.workspace}}/image.tar
